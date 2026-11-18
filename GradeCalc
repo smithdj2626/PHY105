@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PHY105 Final Grade Estimator</title>
+  <style>
+    body {
+      font-family: Calibri, Arial, sans-serif;
+      margin: 32px;
+      background-color: #f9fafb;
+      color: #111827;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 680px;
+      background-color: #ffffff;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    td {
+      border: 1px solid #d1d5db;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    td.label {
+      width: 68%;
+    }
+    td.value {
+      width: 20%;
+      text-align: right;
+    }
+    td.unit {
+      width: 12%;
+      text-align: left;
+      color: #4b5563;
+    }
+    tr.spacer td {
+      height: 14px;
+      background-color: #f3f4f6;
+    }
+    tr.result td {
+      font-weight: bold;
+      background-color: #eff6ff;
+    }
+    input[type="number"] {
+      width: 75px;
+      padding: 4px 6px;
+      text-align: right;
+      font-size: 14px;
+      border: 1px solid #9ca3af;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <table>
+    <tbody>
+      <!-- Current Grades -->
+      <tr>
+        <td class="label">Enter your current Lab grade (in %)</td>
+        <td class="value"><input type="number" id="b4" value="85" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">%</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your current Weekly Assignment grade (in %)</td>
+        <td class="value"><input type="number" id="b5" value="95" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">%</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your current Exams grade (in %)</td>
+        <td class="value"><input type="number" id="b6" value="80" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">%</td>
+      </tr>
+
+      <tr class="spacer"><td colspan="3"></td></tr>
+
+      <!-- Best & Worst Case Outputs -->
+      <tr class="result">
+        <td class="label">Best Case (100% on all remaining assignments)</td>
+        <td class="value" id="b8">88.74%</td>
+        <td class="unit"></td>
+      </tr>
+      <tr class="result">
+        <td class="label">Worst Case (0% on all remaining assignments)</td>
+        <td class="value" id="b9">71.51%</td>
+        <td class="unit"></td>
+      </tr>
+
+      <tr class="spacer"><td colspan="3"></td></tr>
+
+      <!-- Expected Remaining Grades -->
+      <tr>
+        <td class="label">Enter your expected Lab 8 grade (in points out of 20)</td>
+        <td class="value"><input type="number" id="b13" value="20" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/20</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your expected Week 14 quiz grade (in points out of 10)</td>
+        <td class="value"><input type="number" id="b14" value="10" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/10</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your expected Week 15 quiz grade (in points out of 10)</td>
+        <td class="value"><input type="number" id="b15" value="10" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/10</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your expected Week 14 HW grade (in points out of 18)</td>
+        <td class="value"><input type="number" id="b16" value="18" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/18</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your expected Week 15 HW grade (in points out of 15)</td>
+        <td class="value"><input type="number" id="b17" value="15" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/15</td>
+      </tr>
+      <tr>
+        <td class="label">Enter your expected Exam 4 grade (in points out of 100)</td>
+        <td class="value"><input type="number" id="b18" value="80" step="any" oninput="calculateGrades()"></td>
+        <td class="unit">/100</td>
+      </tr>
+
+      <!-- Expected Final Grade Output -->
+      <tr class="result">
+        <td class="label">Here is your expected final grade</td>
+        <td class="value" id="b19">86.74%</td>
+        <td class="unit"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function calculateGrades() {
+      const b4 = parseFloat(document.getElementById('b4').value) || 0;
+      const b5 = parseFloat(document.getElementById('b5').value) || 0;
+      const b6 = parseFloat(document.getElementById('b6').value) || 0;
+
+      const b13 = parseFloat(document.getElementById('b13').value) || 0;
+      const b14 = parseFloat(document.getElementById('b14').value) || 0;
+      const b15 = parseFloat(document.getElementById('b15').value) || 0;
+      const b16 = parseFloat(document.getElementById('b16').value) || 0;
+      const b17 = parseFloat(document.getElementById('b17').value) || 0;
+      const b18 = parseFloat(document.getElementById('b18').value) || 0;
+
+      // Exact formulas from Sheet1 (B8, B9, and B19)
+      const bestCase = 0.3 * ((b4 / 100) * 140 + 20) / 160
+                     + 0.3 * ((b5 / 100) * 405 + 53) / 458
+                     + 0.4 * ((b6 / 100) * 300 + 100) / 400;
+
+      const worstCase = 0.3 * ((b4 / 100) * 140 + 0) / 160
+                      + 0.3 * ((b5 / 100) * 405 + 0) / 458
+                      + 0.4 * ((b6 / 100) * 300 + 0) / 400;
+
+      const expectedFinal = 0.3 * ((b4 / 100) * 140 + b13) / 160
+                          + 0.3 * ((b5 / 100) * 405 + b14 + b15 + b16 + b17) / 458
+                          + 0.4 * ((b6 / 100) * 300 + b18) / 400;
+
+      document.getElementById('b8').textContent = (bestCase * 100).toFixed(2) + '%';
+      document.getElementById('b9').textContent = (worstCase * 100).toFixed(2) + '%';
+      document.getElementById('b19').textContent = (expectedFinal * 100).toFixed(2) + '%';
+    }
+  </script>
+
+</body>
+</html>
